@@ -93,3 +93,38 @@ function uploadDataToGoogleSheet(data) {
 // Para llamar a esta función al cargar el archivo, puedes hacer algo como esto:
 // const data = [["Valor1", "Valor2", "Valor3"]];  // Reemplaza con los datos a cargar
 // uploadDataToGoogleSheet(data);
+// Descargar datos por rango de fechas
+document.getElementById("download-range-btn").addEventListener("click", function() {
+    const startDate = document.getElementById("start-date").value;
+    const endDate = document.getElementById("end-date").value;
+
+    downloadDataFromGoogleSheet(startDate, endDate);
+});
+
+// Función para descargar datos desde Google Sheets
+function downloadDataFromGoogleSheet(startDate, endDate) {
+    const spreadsheetId = "1rZQjkpv94q1hmRl0OiGlWpZ325B_newG5H0DmUUv264"; // ID de tu Google Sheet
+    const range = "Sheet1!A1:H"; // Cambia a la hoja y rango donde deseas leer datos
+
+    gapi.client.sheets.spreadsheets.values.get({
+        spreadsheetId: spreadsheetId,
+        range: range,
+    }).then((response) => {
+        const rows = response.result.values;
+
+        if (rows.length) {
+            const filteredData = rows.filter(row => {
+                const date = new Date(row[4]); // Cambia el índice 4 al que corresponda la fecha en tu hoja
+                return date >= new Date(startDate) && date <= new Date(endDate);
+            });
+
+            // Aquí puedes procesar los datos filtrados (ejemplo: mostrarlos en consola)
+            console.log("Datos filtrados:", filteredData);
+            alert(`Se encontraron ${filteredData.length} registros entre ${startDate} y ${endDate}.`);
+        } else {
+            alert('No se encontraron datos.');
+        }
+    }, (error) => {
+        console.error(`Error al obtener datos: ${error}`);
+    });
+}
