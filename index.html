@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Sistema de Autenticación</title>
+</head>
+<body>
+    <div id="app">
+        <h1>Sistema de Autenticación</h1>
+        <div id="auth-container">
+            <input type="text" id="username" placeholder="Usuario" required>
+            <input type="password" id="password" placeholder="Contraseña" required>
+            <button id="login-btn">Iniciar sesión</button>
+            <p id="error-msg" class="hidden">Credenciales incorrectas. Intentos restantes: <span id="attempts"></span></p>
+        </div>
+        <div id="options-container" class="hidden">
+            <h2>Opciones</h2>
+            <button id="upload-btn">Cargar archivo Excel</button>
+            <button id="download-btn">Descargar archivo Excel</button>
+        </div>
+        <input type="file" id="file-input" class="hidden">
+        <div id="date-range" class="hidden">
+            <h3>Descargar por rango de fechas</h3>
+            <label for="start-date">Desde:</label>
+            <input type="date" id="start-date">
+            <label for="end-date">Hasta:</label>
+            <input type="date" id="end-date">
+            <button id="download-range-btn">Descargar</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
