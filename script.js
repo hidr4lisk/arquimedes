@@ -17,6 +17,7 @@ document.getElementById("login-btn").addEventListener("click", function() {
         alert(`Acceso concedido a la hoja de ${username}.`);
         document.getElementById("auth-container").classList.add("hidden");
         document.getElementById("options-container").classList.remove("hidden");
+        initializeGoogleSheetsAPI();  // Inicializa la API de Google Sheets después de iniciar sesión
     } else {
         intentos++;
         document.getElementById("error-msg").classList.remove("hidden");
@@ -28,6 +29,18 @@ document.getElementById("login-btn").addEventListener("click", function() {
         }
     }
 });
+
+// Inicializa la API de Google Sheets
+function initializeGoogleSheetsAPI() {
+    gapi.load("client:auth2", function() {
+        gapi.auth2.init({
+            client_id: "113241174294985045324.apps.googleusercontent.com", // Reemplaza con tu Client ID
+            scope: "https://www.googleapis.com/auth/spreadsheets"
+        }).then(function () {
+            // Aquí puedes realizar cualquier acción después de la inicialización
+        });
+    });
+}
 
 // Cargar archivo Excel
 document.getElementById("upload-btn").addEventListener("click", function() {
@@ -52,3 +65,31 @@ document.getElementById("download-range-btn").addEventListener("click", function
     // Aquí iría la lógica para descargar datos de Google Sheets usando la API de Google
     alert(`Datos descargados desde ${startDate} hasta ${endDate}.`);
 });
+
+// Función para cargar datos en Google Sheets
+function uploadDataToGoogleSheet(data) {
+    const spreadsheetId = "1rZQjkpv94q1hmRl0OiGlWpZ325B_newG5H0DmUUv264";  // ID de tu Google Sheet
+    const range = "Sheet1!A1";  // Cambia a la hoja y rango donde deseas agregar datos
+    const valueInputOption = "RAW";
+
+    const requestBody = {
+        values: data
+    };
+
+    gapi.client.sheets.spreadsheets.values.append({
+        spreadsheetId: spreadsheetId,
+        range: range,
+        valueInputOption: valueInputOption,
+        resource: requestBody
+    }).then((response) => {
+        const result = response.result;
+        console.log(`${result.updates.updatedCells} celdas actualizadas.`);
+        alert(`Datos subidos correctamente.`);
+    }, (error) => {
+        console.error(`Error al subir datos: ${error}`);
+    });
+}
+
+// Para llamar a esta función al cargar el archivo, puedes hacer algo como esto:
+// const data = [["Valor1", "Valor2", "Valor3"]];  // Reemplaza con los datos a cargar
+// uploadDataToGoogleSheet(data);
